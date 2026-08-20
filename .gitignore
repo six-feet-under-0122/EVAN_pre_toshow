@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+
+# 环境变量和敏感信息
+.env
+.env.local
+*.db
+*.sqlite3
+*.sqlite
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 前端
+node_modules/
+dist/
+.DS_Store
+
+# 项目特定
+backend/__pycache__/
+backend/*.db
+backend/memory_db/
+backend/.env
+
+# 日志
+*.log

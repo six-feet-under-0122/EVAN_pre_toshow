@@ -1,0 +1,20 @@
+/* Evan主题色 */
+
+.user .bubble {
+  background: #f2e0e8;
+  color: #541c1c;
+}
+
+.assistant .bubble {
+  background: #541c1c;
+  color: white;
+}
+
+button {
+  background: #541c1c;
+  color: white;
+}
+
+button:hover {
+  background: #6e2b2b;
+}
