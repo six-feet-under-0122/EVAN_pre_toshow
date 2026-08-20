@@ -58,7 +58,7 @@ const isTyping = ref(false) // 是否正在打字
 let hideTimer = null
 let pokeTimer = null
 
-const isPoking = ref(false) // 是否正在被动搭话中
+const isPoking = ref(true) // 是否正在被动搭话中
 // --- 聊天数据 ---
 const petSessionId = ref(null)
 const petMessages = ref([])
@@ -166,9 +166,6 @@ const handleWindowBlur = () => {
   startHideTimer()
 }
 
-
-
-// 修改原先的 sendPetMessage 发送完毕后的判断：
 const sendPetMessage = async () => {
   if (!inputMsg.value.trim() || isSending.value) return
   
@@ -213,25 +210,22 @@ const handleGlobalMouseMove = (e) => {
 const startProactivePoke = () => {
   if (pokeTimer) return 
   pokeTimer = setInterval(async () => {
-    // 假设 30% 的概率触发，不至于太烦人
     if (Math.random() < 0.3) {
       try {
         const res = await axios.post("http://127.0.0.1:5000/proactive_poke")
         const msg = res.data.message
-        // 🌟 通知主进程，在鼠标位置显示弹窗！
         ipcRenderer.send('show-mouse-popup', msg)
       } catch (e) {
         console.error("搭话失败", e)
       }
     }
-  }, 600000) // 10分钟一次
+  }, 6000)// 每 6 秒尝试一次
 
 }
 onMounted(() => {
   ipcRenderer.send('set-ignore-mouse', true)
   window.addEventListener('mousemove', handleGlobalMouseMove)
   
-  // 新增：监听窗口失去焦点事件
   window.addEventListener('blur', handleWindowBlur)
   
   initPetSession()
@@ -243,14 +237,12 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('mousemove', handleGlobalMouseMove)
   
-  // 新增：移除监听
   window.removeEventListener('blur', handleWindowBlur)
 
   if (pokeTimer) clearInterval(pokeTimer)
 })
 
 
-// --- 手搓拖拽逻辑 ---
 const isDragging = ref(false)
 let hasMoved = false
 let offsetX = 0; let offsetY = 0
@@ -259,7 +251,7 @@ let initialScreenX = 0; let initialScreenY = 0
 const startDrag = (e) => {
   isDragging.value = true
   hasMoved = false
-  bubbleVisible.value = false // 拖动立刻隐藏
+  bubbleVisible.value = false
   if (hideTimer) clearTimeout(hideTimer)
   offsetX = e.clientX; offsetY = e.clientY
   initialScreenX = e.screenX; initialScreenY = e.screenY
